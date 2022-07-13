@@ -39,7 +39,7 @@ const (
 	TypePrivate  Type = "Private"    // Private（即 Work，好友工作群）
 	TypeChatRoom Type = "ChatRoom"   // ChatRoom（即 Meeting，会议群）
 	TypeLiveRoom Type = "AVChatRoom" // AVChatRoom（直播群）
-	TypeCommunity Type = "Community" // AVChatRoom（直播群）
+	TypeCommunity Type = "Community" // Community (社群)
 	ApplyJoinOptionFreeAccess     ApplyJoinOption = "FreeAccess"     // 自由加入
 	ApplyJoinOptionNeedPermission ApplyJoinOption = "NeedPermission" // 需要验证
 	ApplyJoinOptionDisableApply   ApplyJoinOption = "DisableApply"   // 禁止加群
