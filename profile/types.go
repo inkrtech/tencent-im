@@ -7,7 +7,7 @@
 
 package profile
 
-import "github.com/dobyte/tencent-im/internal/types"
+import "github.com/webzh/tencent-im/internal/types"
 
 type (
 	// 设置资料（请求）

@@ -5,7 +5,7 @@
 ## 如何使用
 
 ```shell script
-go get github.com/dobyte/tencent-im
+go get github.com/webzh/tencent-im
 ```
 
 ## 调用方法
@@ -16,8 +16,8 @@ package main
 import (
     "fmt"
     
-    "github.com/dobyte/tencent-im"
-    "github.com/dobyte/tencent-im/account"
+    "github.com/webzh/tencent-im"
+    "github.com/webzh/tencent-im/account"
 )
 
 func main() {

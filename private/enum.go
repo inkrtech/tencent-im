@@ -8,7 +8,7 @@
 package private
 
 import (
-    "github.com/dobyte/tencent-im/internal/enum"
+    "github.com/webzh/tencent-im/internal/enum"
 )
 
 const (

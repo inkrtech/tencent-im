@@ -10,8 +10,8 @@ package group
 import (
 	"time"
 
-	"github.com/dobyte/tencent-im/internal/core"
-	"github.com/dobyte/tencent-im/internal/enum"
+	"github.com/webzh/tencent-im/internal/core"
+	"github.com/webzh/tencent-im/internal/enum"
 )
 
 var (
@@ -39,7 +39,7 @@ const (
 	TypePrivate  Type = "Private"    // Private（即 Work，好友工作群）
 	TypeChatRoom Type = "ChatRoom"   // ChatRoom（即 Meeting，会议群）
 	TypeLiveRoom Type = "AVChatRoom" // AVChatRoom（直播群）
-
+	TypeCommunity Type = "Community" // AVChatRoom（直播群）
 	ApplyJoinOptionFreeAccess     ApplyJoinOption = "FreeAccess"     // 自由加入
 	ApplyJoinOptionNeedPermission ApplyJoinOption = "NeedPermission" // 需要验证
 	ApplyJoinOptionDisableApply   ApplyJoinOption = "DisableApply"   // 禁止加群
@@ -356,7 +356,7 @@ func (g *Group) checkTypeArgError() error {
 	}
 
 	switch Type(g.groupType) {
-	case TypePublic, TypePrivate, TypeChatRoom, TypeLiveRoom:
+	case TypePublic, TypePrivate, TypeChatRoom, TypeLiveRoom, TypeCommunity:
 	default:
 		return errInvalidGroupType
 	}

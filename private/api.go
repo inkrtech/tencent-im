@@ -8,9 +8,9 @@
 package private
 
 import (
-	"github.com/dobyte/tencent-im/internal/conv"
-	"github.com/dobyte/tencent-im/internal/core"
-	"github.com/dobyte/tencent-im/internal/types"
+	"github.com/webzh/tencent-im/internal/conv"
+	"github.com/webzh/tencent-im/internal/core"
+	"github.com/webzh/tencent-im/internal/types"
 )
 
 const (

@@ -10,7 +10,7 @@ package push
 import (
 	"errors"
 
-	"github.com/dobyte/tencent-im/internal/entity"
+	"github.com/webzh/tencent-im/internal/entity"
 )
 
 var errInvalidPushCondition = errors.New("attrs and tags condition cannot be set at the same time")
