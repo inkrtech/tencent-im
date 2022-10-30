@@ -9,8 +9,8 @@ package group
 
 import (
 	"errors"
-	
-	"github.com/webzh/tencent-im/internal/entity"
+
+	"github.com/inkrtech/tencent-im/internal/entity"
 )
 
 var (
@@ -21,10 +21,10 @@ var (
 type (
 	// MsgOnlineOnlyFlag 只发送在线成员标识
 	MsgOnlineOnlyFlag int
-	
+
 	// MsgPriority 消息优先级
 	MsgPriority string
-	
+
 	// MsgStatus 消息状态
 	MsgStatus int
 )
@@ -32,16 +32,16 @@ type (
 const (
 	MsgOnlineOnlyFlagNo  MsgOnlineOnlyFlag = 0 // 发送所有成员
 	MsgOnlineOnlyFlagYes MsgOnlineOnlyFlag = 1 // 仅发送在线成员
-	
+
 	MsgPriorityHigh   MsgPriority = "High"   // 高优先级消息
 	MsgPriorityNormal MsgPriority = "Normal" // 普通优先级消息
 	MsgPriorityLow    MsgPriority = "Low"    // 低优先级消息
 	MsgPriorityLowest MsgPriority = "Lowest" // 最低优先级消息
-	
+
 	MsgStatusNormal  MsgStatus = 0 // 正常消息
 	MsgStatusInvalid MsgStatus = 1 // 被删除或者消息过期的消息
 	MsgStatusRevoked MsgStatus = 2 // 被撤回的消息
-	
+
 	AtAllMembersFlag = "@all" // @所有成员的标识
 )
 
@@ -134,7 +134,7 @@ func (m *Message) GetForbidCallbackControl() (controls []string) {
 			}
 		}
 	}
-	
+
 	return
 }
 
@@ -164,7 +164,7 @@ func (m *Message) GetSendMsgControl() (controls []string) {
 			}
 		}
 	}
-	
+
 	return
 }
 
@@ -173,7 +173,7 @@ func (m *Message) AtMembers(userId ...string) {
 	if m.atMembers == nil {
 		m.atMembers = make(map[string]bool)
 	}
-	
+
 	for _, id := range userId {
 		m.atMembers[id] = true
 	}
@@ -199,7 +199,7 @@ func (m *Message) checkSendError() (err error) {
 	if err = m.CheckBodyArgError(); err != nil {
 		return
 	}
-	
+
 	return
 }
 
@@ -208,14 +208,14 @@ func (m *Message) checkImportError() (err error) {
 	if m.GetSender() == "" {
 		return errNotSetSender
 	}
-	
+
 	if m.sendTime == 0 {
 		return errNotSetSendTime
 	}
-	
+
 	if err = m.CheckBodyArgError(); err != nil {
 		return
 	}
-	
+
 	return
 }

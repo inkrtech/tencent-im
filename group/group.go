@@ -10,8 +10,8 @@ package group
 import (
 	"time"
 
-	"github.com/webzh/tencent-im/internal/core"
-	"github.com/webzh/tencent-im/internal/enum"
+	"github.com/inkrtech/tencent-im/internal/core"
+	"github.com/inkrtech/tencent-im/internal/enum"
 )
 
 var (
@@ -35,11 +35,11 @@ type (
 )
 
 const (
-	TypePublic   Type = "Public"     // Public（陌生人社交群）
-	TypePrivate  Type = "Private"    // Private（即 Work，好友工作群）
-	TypeChatRoom Type = "ChatRoom"   // ChatRoom（即 Meeting，会议群）
-	TypeLiveRoom Type = "AVChatRoom" // AVChatRoom（直播群）
-	TypeCommunity Type = "Community" // Community (社群)
+	TypePublic                    Type            = "Public"         // Public（陌生人社交群）
+	TypePrivate                   Type            = "Private"        // Private（即 Work，好友工作群）
+	TypeChatRoom                  Type            = "ChatRoom"       // ChatRoom（即 Meeting，会议群）
+	TypeLiveRoom                  Type            = "AVChatRoom"     // AVChatRoom（直播群）
+	TypeCommunity                 Type            = "Community"      // Community (社群)
 	ApplyJoinOptionFreeAccess     ApplyJoinOption = "FreeAccess"     // 自由加入
 	ApplyJoinOptionNeedPermission ApplyJoinOption = "NeedPermission" // 需要验证
 	ApplyJoinOptionDisableApply   ApplyJoinOption = "DisableApply"   // 禁止加群

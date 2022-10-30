@@ -13,9 +13,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/webzh/tencent-im/internal/core"
-	"github.com/webzh/tencent-im/internal/enum"
-	"github.com/webzh/tencent-im/internal/types"
+	"github.com/inkrtech/tencent-im/internal/core"
+	"github.com/inkrtech/tencent-im/internal/enum"
+	"github.com/inkrtech/tencent-im/internal/types"
 )
 
 type User struct {

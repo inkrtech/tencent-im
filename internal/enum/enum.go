@@ -8,7 +8,7 @@
 package enum
 
 import (
-	"github.com/webzh/tencent-im/internal/types"
+	"github.com/inkrtech/tencent-im/internal/types"
 )
 
 const (

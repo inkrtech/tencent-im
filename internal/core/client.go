@@ -12,11 +12,10 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/webzh/http"
-
-	"github.com/webzh/tencent-im/internal/enum"
-	"github.com/webzh/tencent-im/internal/sign"
-	"github.com/webzh/tencent-im/internal/types"
+	"github.com/inkrtech/tencent-im-http"
+	"github.com/inkrtech/tencent-im/internal/enum"
+	"github.com/inkrtech/tencent-im/internal/sign"
+	"github.com/inkrtech/tencent-im/internal/types"
 )
 
 const (
