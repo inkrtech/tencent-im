@@ -321,4 +321,36 @@ type (
 		Notification    string `json:"Notification"`     // 修改后的群公告
 		OperatorUserId  string `json:"Operator_Account"` // 请求的发起者
 	}
+
+	// ResultNotify 内容审核结果回调
+	ResultNotify struct {
+		//送审场景：
+		//单聊 = C2C
+		//单聊自定义消息 = C2CCustom
+		//群聊 = Group
+		//群聊自定义消息 = GroupCustom
+		//群资料 = GroupInfo
+		//群成员资料 = GroupMemberInfo
+		//关系链 = RelationChain
+		//用户资料 = UserInfo
+		Scene       string `json:"Scene"`
+		SdkAppId    int    `json:"SdkAppId"`
+		FromAccount string `json:"From_Account"` //送审内容的发起者 UserID
+		ContactItem struct {
+			ContactType int    `json:"ContactType"`
+			ToAccount   string `json:"To_Account"`
+		} `json:"ContactItem"` //消息送审时，表示消息接收对象
+
+		ContentType string   `json:"ContentType"` //表示送审的内容类型： 文本 = Text、图片 = Image、音频 = Audio、视频 = Video
+		TextContent []string `json:"TextContent"` //当 ContentType 为 Text 时，表示送审的文本内容。文本自定义消息可能存在多个数组成员返回，其他消息只有一个数组成员返回。
+		FileURL     string   `json:"FileUrl"`     //当 ContentType 为 Image/Audio/Video 时，表示送审的文件 URL
+		MsgID       string   `json:"MsgID"`       //单聊送审:MsgID 为单聊消息 MsgKey; 群聊送审:MsgID 为群聊消息 MsgSeq ,其中群消息如果没有MsgID，则表示违规拦截或者非审核环节导致消息没下发
+
+		CtxcbResult     int      `json:"CtxcbResult"`     //IM处置策略： 1：表示拦截  0：表示放过
+		CtxcbRequestId  string   `json:"CtxcbRequestId"`  //第三方内容服务审核标示
+		CtxcbKeywords   []string `json:"CtxcbKeywords"`   //文本命中的敏感词
+		CtxcbSuggestion string   `json:"CtxcbSuggestion"` //第三方内容审核服务审核建议：Block/Review/Normal
+		CtxcbLabel      string   `json:"CtxcbLabel"`      //审核命中的违规分类： Normal/Illegal/Abuse/Polity/Ad/Porn/Sexy/Terror/Composite
+		CloudCustomData string   `json:"CloudCustomData"` //单聊或者群聊消息审核，消息体中对应的自定义字段 CloudCustomData 原样返回。其他场景审核该字段为空
+	}
 )

@@ -505,4 +505,22 @@ type (
 		types.ActionBaseResp
 		OnlineMemberNum int `json:"OnlineMemberNum"` // 该群组的在线人数
 	}
+
+	// 获取直播群在线成员列表（请求）
+	getMembersReq struct {
+		GroupId string `json:"GroupId"` // （必填）操作的群ID
+	}
+
+	// 获取直播群在线成员列表（响应）
+	GetMembersResp struct {
+		types.ActionBaseResp
+		MemberList    []OnlineMember `json:"MemberList"`    // 该群组的在线成员列表
+		NextTimestamp int            `json:"NextTimestamp"` //分页拉取标志，非0表示还有更多成员未返回，需要将该数字设置到请求参数 Timestamp 中拉取更多成员；0表示已经返回所有成员
+	}
+	OnlineMember struct {
+		JoinTime      int    `json:"JoinTime"`       //该成员进群时间
+		MemberAccount string `json:"Member_Account"` //用户的 UserID
+		NickName      string `json:"NickName"`
+		Avatar        string `json:"Avatar"`
+	}
 )

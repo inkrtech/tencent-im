@@ -39,6 +39,9 @@ const (
 	commandAfterGroupFull            = "Group.CallbackAfterGroupFull"
 	commandAfterGroupDestroyed       = "Group.CallbackAfterGroupDestroyed"
 	commandAfterGroupInfoChanged     = "Group.CallbackAfterGroupInfoChanged"
+
+	//内容审核
+	commandResultNotify = "ContentCallback.ResultNotify" //审核结果回调
 )
 
 const (
@@ -64,6 +67,7 @@ const (
 	EventAfterGroupFull
 	EventAfterGroupDestroyed
 	EventAfterGroupInfoChanged
+	EventResultNotify
 )
 
 const (
@@ -232,6 +236,9 @@ func (c *callback) parseCommand(command string, body []byte) (event Event, data 
 	case commandAfterGroupInfoChanged:
 		event = EventAfterGroupInfoChanged
 		data = &AfterGroupInfoChanged{}
+	case commandResultNotify:
+		event = EventResultNotify
+		data = &ResultNotify{}
 	default:
 		return 0, nil, errors.New("invalid callback command")
 	}

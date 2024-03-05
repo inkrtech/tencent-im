@@ -43,6 +43,10 @@ const (
 	commandGetGroupSimpleMsg           = "group_msg_get_simple"
 	commandGetOnlineMemberNum          = "get_online_member_num"
 
+	// 直播群相关
+	serviceLiveGroup  = "group_open_avchatroom_http_svc"
+	commandGetMembers = "get_members"
+
 	batchGetGroupsLimit = 50 // 批量获取群组限制
 )
 
@@ -252,6 +256,12 @@ type API interface {
 	// 点击查看详细文档:
 	// https://cloud.tencent.com/document/product/269/49180
 	GetOnlineMemberNum(groupId string) (num int, err error)
+
+	// GetOnlineMembers 获取直播群在线成员列表 (该功能需旗舰版)
+	// App 管理员可以根据群组 ID 获取直播群在线成员列表。
+	// 点击查看详细文档:
+	// https://cloud.tencent.com/document/product/269/77266
+	GetOnlineMembers(groupId string) (resp *GetMembersResp, err error)
 }
 
 type api struct {
@@ -1310,6 +1320,21 @@ func (a *api) GetOnlineMemberNum(groupId string) (num int, err error) {
 	}
 
 	num = resp.OnlineMemberNum
+
+	return
+}
+
+// GetOnlineMembers 获取直播群在线成员列表 (该功能需旗舰版)
+// App 管理员可以根据群组 ID 获取直播群在线成员列表。
+// 点击查看详细文档:
+// https://cloud.tencent.com/document/product/269/77266
+func (a *api) GetOnlineMembers(groupId string) (resp *GetMembersResp, err error) {
+	req := &getMembersReq{GroupId: groupId}
+	resp = &GetMembersResp{}
+
+	if err = a.client.Post(serviceLiveGroup, commandGetMembers, req, resp); err != nil {
+		return
+	}
 
 	return
 }
