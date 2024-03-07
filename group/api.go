@@ -44,8 +44,9 @@ const (
 	commandGetOnlineMemberNum          = "get_online_member_num"
 
 	// 直播群相关
-	serviceLiveGroup  = "group_open_avchatroom_http_svc"
-	commandGetMembers = "get_members"
+	serviceLiveGroup           = "group_open_avchatroom_http_svc"
+	commandGetMembers          = "get_members"
+	commandModifyGroupUserTags = "modify_user_info"
 
 	batchGetGroupsLimit = 50 // 批量获取群组限制
 )
@@ -754,6 +755,22 @@ func (a *api) UpdateMember(groupId string, member *Member) (err error) {
 	}
 
 	if err = a.client.Post(serviceGroup, commandModifyGroupMemberInfo, req, &types.ActionBaseResp{}); err != nil {
+		return
+	}
+
+	return
+}
+
+// UpdateGroupUserTags 设置直播群成员标记（此功能需 旗舰版套餐，并且已开通“直播群在线成员列表”功能）
+// App管理员和群主可以对直播群成员设置不同的标记以区分不同类型的群成员
+// 点击查看详细文档:
+// https://cloud.tencent.com/document/product/269/79267
+func (a *api) UpdateGroupUserTags(groupId string, members MemberList) (err error) {
+	req := &UpdateGroupUserTags{}
+	req.GroupId = groupId
+	req.MemberList = members
+
+	if err = a.client.Post(serviceLiveGroup, commandModifyGroupUserTags, req, &types.ActionBaseResp{}); err != nil {
 		return
 	}
 

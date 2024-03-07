@@ -230,6 +230,17 @@ type (
 		AppMemberDefinedData []customDataItem `json:"AppMemberDefinedData,omitempty"` // （选填）群成员自定义数据
 	}
 
+	//设置直播群成员标记（请求）
+	UpdateGroupUserTags struct {
+		GroupId     string     `json:"GroupId"`
+		CommandType int        `json:"CommandType"`
+		MemberList  MemberList `json:"MemberList"` // 群成员列表
+	}
+
+	MemberList struct {
+		MemberAccount string `json:"Member_Account"` // 成员 UserID
+		Marks         []int  `json:"Marks"`          // 标记值
+	}
 	// FetchMemberGroupsArg 拉取用户所加入的群组（参数）
 	FetchMemberGroupsArg struct {
 		UserId               string  // （必填）用户ID
