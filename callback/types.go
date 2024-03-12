@@ -320,6 +320,9 @@ type (
 		Type            string `json:"Type"`             // 群组类型
 		Notification    string `json:"Notification"`     // 修改后的群公告
 		OperatorUserId  string `json:"Operator_Account"` // 请求的发起者
+		Name            string `json:"Name"`             // 变动后的群名称
+		Introduction    string `json:"Introduction"`     // 变动后的群简介
+		FaceUrl         string `json:"FaceUrl"`          // 变动后的群头像
 	}
 
 	// ResultNotify 内容审核结果回调
