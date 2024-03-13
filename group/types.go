@@ -534,4 +534,11 @@ type (
 		NickName      string `json:"NickName"`
 		Avatar        string `json:"Avatar"`
 	}
+
+	// 设置/取消直播群管理员(请求)
+	UpdateGroupUserAdmin struct {
+		GroupId      string   `json:"GroupId"`
+		CommandType  int      `json:"CommandType"`   //1: 设置管理员 2: 取消设置管理员
+		AdminAccount []string `json:"Admin_Account"` //要修改的管理员 UserID 列表，一个直播群最多可以设置5个管理员
+	}
 )

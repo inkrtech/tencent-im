@@ -47,6 +47,7 @@ const (
 	serviceLiveGroup           = "group_open_avchatroom_http_svc"
 	commandGetMembers          = "get_members"
 	commandModifyGroupUserTags = "modify_user_info"
+	commandModifyGroupAdmin    = "modify_admin"
 
 	batchGetGroupsLimit = 50 // 批量获取群组限制
 )
@@ -263,6 +264,18 @@ type API interface {
 	// 点击查看详细文档:
 	// https://cloud.tencent.com/document/product/269/77266
 	GetOnlineMembers(groupId string) (resp *GetMembersResp, err error)
+
+	// UpdateGroupUserTags 设置直播群成员标记
+	// App管理员和群主可以对直播群成员设置不同的标记以区分不同类型的群成员
+	// 点击查看详细文档:
+	// https://cloud.tencent.com/document/product/269/79267
+	UpdateGroupUserTags(groupId string, members MemberList) (err error)
+
+	//UpdateGroupUserAdmin 设置/取消直播群管理员
+	//App管理员可以为直播群设置和取消管理员
+	// 点击查看详细文档:
+	//https://cloud.tencent.com/document/product/269/102857
+	UpdateGroupUserAdmin(groupId string, userIds []string, commandType int) (err error)
 }
 
 type api struct {
@@ -1353,5 +1366,20 @@ func (a *api) GetOnlineMembers(groupId string) (resp *GetMembersResp, err error)
 		return
 	}
 
+	return
+}
+
+// UpdateGroupUserAdmin 设置/取消直播群管理员
+// App管理员可以为直播群设置和取消管理员
+// 点击查看详细文档:
+// https://cloud.tencent.com/document/product/269/102857
+func (a *api) UpdateGroupUserAdmin(groupId string, userIds []string, commandType int) (err error) {
+	req := &UpdateGroupUserAdmin{}
+	req.GroupId = groupId
+	req.CommandType = commandType
+	req.AdminAccount = userIds
+	if err = a.client.Post(serviceLiveGroup, commandModifyGroupAdmin, req, &types.ActionBaseResp{}); err != nil {
+		return
+	}
 	return
 }
