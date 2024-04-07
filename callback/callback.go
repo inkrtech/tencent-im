@@ -8,12 +8,15 @@
 package callback
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"sync"
+	"time"
 )
 
 const (
@@ -82,6 +85,8 @@ const (
 	queryClientId    = "ClientIP"
 	queryOptPlatform = "OptPlatform"
 	queryContentType = "contenttype"
+	querySign        = "Sign"
+	queryRequestTime = "RequestTime"
 )
 
 type (
@@ -100,6 +105,7 @@ type (
 
 	callback struct {
 		appId    int
+		token    string
 		mu       sync.Mutex
 		handlers map[Event]EventHandlerFunc
 	}
@@ -118,9 +124,10 @@ type (
 	}
 )
 
-func NewCallback(appId int) Callback {
+func NewCallback(appId int, token string) Callback {
 	return &callback{
 		appId:    appId,
+		token:    token,
 		handlers: make(map[Event]EventHandlerFunc),
 	}
 }
@@ -148,6 +155,24 @@ func (c *callback) Listen(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	sign, ok := c.GetQuery(r, querySign)
+	if !ok {
+		_ = a.AckFailure("invalid callback sign")
+		return
+	}
+
+	requestTime, ok := c.GetQuery(r, queryRequestTime)
+	if !ok {
+		_ = a.AckFailure("invalid callback requestTime")
+		return
+	}
+
+	isPass := c.checkSign(sign, requestTime)
+	if !isPass {
+		_ = a.AckFailure("invalid callback sign")
+		return
+	}
+
 	body, err := ioutil.ReadAll(r.Body)
 	_ = r.Body.Close()
 	if err != nil {
@@ -165,6 +190,27 @@ func (c *callback) Listen(w http.ResponseWriter, r *http.Request) {
 			_ = a.AckSuccess(ackSuccessCode)
 		}
 	}
+}
+
+func (c *callback) checkSign(sign string, requestTime string) bool {
+	requestTimeUnix, _ := strconv.ParseInt(requestTime, 10, 64)
+	if requestTimeUnix+60 < time.Now().Unix() {
+		return false
+	}
+	token := c.token
+	encodeStr := token + requestTime
+	data := []byte(encodeStr)
+
+	hash := sha256.New()
+	hash.Write(data)
+
+	result := hash.Sum(nil)
+	hexResult := hex.EncodeToString(result)
+	if hexResult != sign {
+		return false
+	}
+
+	return true
 }
 
 // parseCommand parse command and body package.
