@@ -336,10 +336,12 @@ type (
 		//群成员资料 = GroupMemberInfo
 		//关系链 = RelationChain
 		//用户资料 = UserInfo
-		Scene       string `json:"Scene"`
-		SdkAppId    int    `json:"SdkAppId"`
-		FromAccount string `json:"From_Account"` //送审内容的发起者 UserID
-		ContactItem struct {
+		Scene           string `json:"Scene"`
+		IsRestAPI       bool   `json:"IsRestAPI"`       //是否为主动审核触发的回调：false=IM内部送审触发；true=主动审核接口触发，一般为主动审核音视频结果回调。
+		CallbackCommand string `json:"CallbackCommand"` //回调命令，可能为空。。。
+		SdkAppId        int    `json:"SdkAppId"`
+		FromAccount     string `json:"From_Account"` //送审内容的发起者 UserID
+		ContactItem     struct {
 			ContactType int    `json:"ContactType"`
 			ToAccount   string `json:"To_Account"`
 		} `json:"ContactItem"` //消息送审时，表示消息接收对象
