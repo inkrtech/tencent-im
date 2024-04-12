@@ -263,7 +263,7 @@ type API interface {
 	// App 管理员可以根据群组 ID 获取直播群在线成员列表。
 	// 点击查看详细文档:
 	// https://cloud.tencent.com/document/product/269/77266
-	GetOnlineMembers(groupId string) (resp *GetMembersResp, err error)
+	GetOnlineMembers(groupId string, timestamp int) (resp *GetMembersResp, err error)
 
 	// UpdateGroupUserTags 设置直播群成员标记
 	// App管理员和群主可以对直播群成员设置不同的标记以区分不同类型的群成员
@@ -1358,8 +1358,8 @@ func (a *api) GetOnlineMemberNum(groupId string) (num int, err error) {
 // App 管理员可以根据群组 ID 获取直播群在线成员列表。
 // 点击查看详细文档:
 // https://cloud.tencent.com/document/product/269/77266
-func (a *api) GetOnlineMembers(groupId string) (resp *GetMembersResp, err error) {
-	req := &getMembersReq{GroupId: groupId}
+func (a *api) GetOnlineMembers(groupId string, timestamp int) (resp *GetMembersResp, err error) {
+	req := &getMembersReq{GroupId: groupId, Timestamp: timestamp}
 	resp = &GetMembersResp{}
 
 	if err = a.client.Post(serviceLiveGroup, commandGetMembers, req, resp); err != nil {
