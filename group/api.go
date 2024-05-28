@@ -283,6 +283,14 @@ type API interface {
 	// 点击查看详细文档:
 	// https://cloud.tencent.com/document/product/269/95617
 	ClearGroupMsg(groupId string, msgSeq int) (err error)
+
+	// GroupMsgGetSimple 拉取群历史消息（定制，只返回消息seq）
+	// 即时通信 IM 的群消息是按 Seq 排序的，按照 server 收到群消息的顺序分配 Seq，先发的群消息 Seq 小，后发的 Seq 大。
+	// 如果用户想拉取一个群的全量消息，首次拉取时不用填拉取 Seq，Server 会自动返回最新的消息，以后拉取时拉取 Seq 填上次返回的最小 Seq 减1。
+	// 如果返回消息的 IsPlaceMsg 为1，表示这个 Seq 的消息或者过期、或者存储失败、或者被删除了。
+	// 点击查看详细文档:
+	// https://cloud.tencent.com/document/product/269/2738
+	GroupMsgGetSimple(groupId, fromUserId string, limit int, msgSeq ...int) (ret *GroupMsgGetSimpleRet, err error)
 }
 
 type api struct {
@@ -1266,19 +1274,15 @@ func (a *api) RevokeMemberMessages(groupId, userId string) (err error) {
 // https://cloud.tencent.com/document/product/269/2738
 func (a *api) FetchMessages(groupId string, limit int, msgSeq ...int) (ret *FetchMessagesRet, err error) {
 	req := &fetchMessagesReq{GroupId: groupId, ReqMsgNumber: limit}
-	req_ := &fetchMessagesWithoutSeqReq{GroupId: groupId, ReqMsgNumber: limit} // 如果msgSeq为空，则请求参数不能有ReqMsgSeq，否则请求接口无数据返回
-
-	resp := &fetchMessagesResp{}
 
 	if len(msgSeq) > 0 {
 		req.ReqMsgSeq = msgSeq[0]
-		if err = a.client.Post(serviceGroup, commandGetGroupSimpleMsg, req, resp); err != nil {
-			return
-		}
-	} else {
-		if err = a.client.Post(serviceGroup, commandGetGroupSimpleMsg, req_, resp); err != nil {
-			return
-		}
+	}
+
+	resp := &fetchMessagesResp{}
+
+	if err = a.client.Post(serviceGroup, commandGetGroupSimpleMsg, req, resp); err != nil {
+		return
 	}
 
 	ret = &FetchMessagesRet{}
@@ -1298,9 +1302,6 @@ func (a *api) FetchMessages(groupId string, limit int, msgSeq ...int) (ret *Fetc
 
 	ret.List = make([]*Message, 0, len(resp.RspMsgList))
 	for _, item := range resp.RspMsgList {
-		if item.IsSystemMsg == 1 { //不返回系统消息
-			continue
-		}
 		message := NewMessage()
 		message.SetSender(item.FromUserId)
 		message.SetRandom(item.MsgRandom)
@@ -1317,8 +1318,6 @@ func (a *api) FetchMessages(groupId string, limit int, msgSeq ...int) (ret *Fetc
 		case 4:
 			message.priority = MsgPriorityLowest
 		}
-
-		ret.List = append(ret.List, message)
 	}
 
 	return
@@ -1410,5 +1409,55 @@ func (a *api) ClearGroupMsg(groupId string, msgSeq int) (err error) {
 		return
 	}
 
+	return
+}
+
+// GroupMsgGetSimple 拉取群历史消息（定制，只返回消息seq）
+// 即时通信 IM 的群消息是按 Seq 排序的，按照 server 收到群消息的顺序分配 Seq，先发的群消息 Seq 小，后发的 Seq 大。
+// 如果用户想拉取一个群的全量消息，首次拉取时不用填拉取 Seq，Server 会自动返回最新的消息，以后拉取时拉取 Seq 填上次返回的最小 Seq 减1。
+// 如果返回消息的 IsPlaceMsg 为1，表示这个 Seq 的消息或者过期、或者存储失败、或者被删除了。
+// 点击查看详细文档:
+// https://cloud.tencent.com/document/product/269/2738
+func (a *api) GroupMsgGetSimple(groupId, fromUserId string, limit int, msgSeq ...int) (ret *GroupMsgGetSimpleRet, err error) {
+	req := &fetchMessagesReq{GroupId: groupId, ReqMsgNumber: limit}
+	req_ := &fetchMessagesWithoutSeqReq{GroupId: groupId, ReqMsgNumber: limit} //没有msgSeq时，不能有ReqMsgSeq这个字段，不然会默认为0导致接口不返回数据。
+
+	resp := &fetchMessagesResp{}
+	if len(msgSeq) > 0 {
+		req.ReqMsgSeq = msgSeq[0]
+		if err = a.client.Post(serviceGroup, commandGetGroupSimpleMsg, req, resp); err != nil {
+			return
+		}
+	} else {
+		if err = a.client.Post(serviceGroup, commandGetGroupSimpleMsg, req_, resp); err != nil {
+			return
+		}
+	}
+
+	ret = &GroupMsgGetSimpleRet{}
+	ret.IsFinished = resp.IsFinished
+
+	if ret.IsFinished == 0 {
+		ret.HasMore = true
+	}
+
+	if count := len(resp.RspMsgList); count > 0 {
+		ret.NextSeq = resp.RspMsgList[count-1].MsgSeq - 1
+
+		if ret.IsFinished == 1 && count == limit {
+			ret.HasMore = true
+		}
+	}
+
+	ret.MsgSeqList = make([]int, 0)
+	for _, item := range resp.RspMsgList {
+		if fromUserId != "" && item.FromUserId == fromUserId { //如果指定了用户，则只返回指定用户的消息seq
+			ret.MsgSeqList = append(ret.MsgSeqList, item.MsgSeq)
+		} else {
+			if item.IsSystemMsg == 0 { //如果没有指定用户，则返回所有非系统消息的seq
+				ret.MsgSeqList = append(ret.MsgSeqList, item.MsgSeq)
+			}
+		}
+	}
 	return
 }
