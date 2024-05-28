@@ -42,6 +42,7 @@ const (
 	commandDeleteGroupMsgBySender      = "delete_group_msg_by_sender"
 	commandGetGroupSimpleMsg           = "group_msg_get_simple"
 	commandGetOnlineMemberNum          = "get_online_member_num"
+	commandClearGroupMsg               = "clear_group_msg"
 
 	// 直播群相关
 	serviceLiveGroup           = "group_open_avchatroom_http_svc"
@@ -276,6 +277,12 @@ type API interface {
 	// 点击查看详细文档:
 	//https://cloud.tencent.com/document/product/269/102857
 	UpdateGroupUserAdmin(groupId string, userIds []string, commandType int) (err error)
+
+	// ClearGroupMsg 清空群聊历史消息
+	// 该 API 接口的作用是清空群聊中用户发送的历史消息，支持所有群组类型。
+	// 点击查看详细文档:
+	// https://cloud.tencent.com/document/product/269/95617
+	ClearGroupMsg(groupId string, msgSeq int) (err error)
 }
 
 type api struct {
@@ -1381,5 +1388,18 @@ func (a *api) UpdateGroupUserAdmin(groupId string, userIds []string, commandType
 	if err = a.client.Post(serviceLiveGroup, commandModifyGroupAdmin, req, &types.ActionBaseResp{}); err != nil {
 		return
 	}
+	return
+}
+
+// ClearGroupMsg 清空群聊历史消息
+// 该 API 接口的作用是清空群聊中用户发送的历史消息，支持所有群组类型。
+// 点击查看详细文档:
+// https://cloud.tencent.com/document/product/269/95617
+func (a *api) ClearGroupMsg(groupId string, msgSeq int) (err error) {
+	req := &clearGroupMsgReq{GroupId: groupId, MsgSeq: msgSeq}
+	if err = a.client.Post(serviceGroup, commandClearGroupMsg, req, &types.ActionBaseResp{}); err != nil {
+		return
+	}
+
 	return
 }

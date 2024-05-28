@@ -500,6 +500,7 @@ type (
 	rspMsgItem struct {
 		FromUserId   string          `json:"From_Account"`
 		IsPlaceMsg   int             `json:"IsPlaceMsg"`
+		IsSystemMsg  int             `json:"IsSystemMsg"` //字段为1时表示系统消息
 		MsgBody      []types.MsgBody `json:"MsgBody"`
 		MsgPriority  int             `json:"MsgPriority"`
 		MsgRandom    uint32          `json:"MsgRandom"`
@@ -543,5 +544,10 @@ type (
 		GroupId      string   `json:"GroupId"`
 		CommandType  int      `json:"CommandType"`   //1: 设置管理员 2: 取消设置管理员
 		AdminAccount []string `json:"Admin_Account"` //要修改的管理员 UserID 列表，一个直播群最多可以设置5个管理员
+	}
+	// 清空群聊历史消息（请求）
+	clearGroupMsgReq struct {
+		GroupId string `json:"GroupId"` //（必填）要清空历史消息的群组 ID
+		MsgSeq  int    `json:"MsgSeq"`  //（选填）清空小于等于 MsgSeq 的历史消息，不填则清空所有的历史消息
 	}
 )
