@@ -504,14 +504,15 @@ type (
 	}
 
 	rspMsgItem struct {
-		FromUserId   string          `json:"From_Account"`
-		IsPlaceMsg   int             `json:"IsPlaceMsg"`
-		IsSystemMsg  int             `json:"IsSystemMsg"` //字段为1时表示系统消息
-		MsgBody      []types.MsgBody `json:"MsgBody"`
-		MsgPriority  int             `json:"MsgPriority"`
-		MsgRandom    uint32          `json:"MsgRandom"`
-		MsgSeq       int             `json:"MsgSeq"`
-		MsgTimeStamp int64           `json:"MsgTimeStamp"`
+		FromUserId  string `json:"From_Account"`
+		IsPlaceMsg  int    `json:"IsPlaceMsg"`
+		IsSystemMsg int    `json:"IsSystemMsg"` //字段为1时表示系统消息
+		//MsgBody      []types.MsgBody `json:"MsgBody"` //不处理消息内容，因为IsSystemMsg = 0 和 IsSystemMsg = 1 时，返回的消息体结构不一样。。。
+		MsgBody      interface{} `json:"MsgBody"`
+		MsgPriority  int         `json:"MsgPriority"`
+		MsgRandom    uint32      `json:"MsgRandom"`
+		MsgSeq       int         `json:"MsgSeq"`
+		MsgTimeStamp int64       `json:"MsgTimeStamp"`
 	}
 
 	// 获取直播群在线人数（请求）
