@@ -1298,6 +1298,9 @@ func (a *api) FetchMessages(groupId string, limit int, msgSeq ...int) (ret *Fetc
 
 	ret.List = make([]*Message, 0, len(resp.RspMsgList))
 	for _, item := range resp.RspMsgList {
+		if item.IsSystemMsg == 1 { //不返回系统消息
+			continue
+		}
 		message := NewMessage()
 		message.SetSender(item.FromUserId)
 		message.SetRandom(item.MsgRandom)
