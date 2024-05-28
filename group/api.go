@@ -1317,6 +1317,7 @@ func (a *api) FetchMessages(groupId string, limit int, msgSeq ...int) (ret *Fetc
 		case 4:
 			message.priority = MsgPriorityLowest
 		}
+		ret.List = append(ret.List, message)
 	}
 
 	return
