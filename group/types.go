@@ -481,6 +481,12 @@ type (
 		ReqMsgSeq    int    `json:"ReqMsgSeq"`              // （选填）拉取消息的最大seq
 		ReqMsgNumber int    `json:"ReqMsgNumber,omitempty"` // （必填）拉取的历史消息的条数，目前一次请求最多返回20条历史消息，所以这里最好小于等于20
 	}
+	// 拉取群历史消息（请求）
+	fetchMessagesWithoutSeqReq struct {
+		GroupId string `json:"GroupId"` // （必填）要拉取历史消息的群组 ID
+		//ReqMsgSeq    int    `json:"ReqMsgSeq"`              // （选填）拉取消息的最大seq
+		ReqMsgNumber int `json:"ReqMsgNumber,omitempty"` // （必填）拉取的历史消息的条数，目前一次请求最多返回20条历史消息，所以这里最好小于等于20
+	}
 
 	// 拉取群历史消息（响应）
 	fetchMessagesResp struct {
