@@ -1265,16 +1265,13 @@ func (a *api) RevokeMemberMessages(groupId, userId string) (err error) {
 // 点击查看详细文档:
 // https://cloud.tencent.com/document/product/269/2738
 func (a *api) FetchMessages(groupId string, limit int, msgSeq ...int) (ret *FetchMessagesRet, err error) {
-	req := &fetchMessagesReq{GroupId: groupId, ReqMsgNumber: limit, ReqMsgSeq: msgSeq[0]}
+	req := &fetchMessagesReq{GroupId: groupId, ReqMsgNumber: limit}
 	req_ := &fetchMessagesWithoutSeqReq{GroupId: groupId, ReqMsgNumber: limit} // 如果msgSeq为空，则请求参数不能有ReqMsgSeq，否则请求接口无数据返回
-
-	//if len(msgSeq) > 0 {
-	//	req.ReqMsgSeq = msgSeq[0]
-	//}
 
 	resp := &fetchMessagesResp{}
 
 	if len(msgSeq) > 0 {
+		req.ReqMsgSeq = msgSeq[0]
 		if err = a.client.Post(serviceGroup, commandGetGroupSimpleMsg, req, resp); err != nil {
 			return
 		}
