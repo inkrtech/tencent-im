@@ -1449,13 +1449,13 @@ func (a *api) GroupMsgGetSimple(groupId, fromUserId string, limit int, msgSeq ..
 		}
 	}
 
-	ret.MsgSeqList = make([]*int, 0)
+	ret.MsgSeqList = make([]int, 0)
 	for _, item := range resp.RspMsgList {
 		if fromUserId != "" && item.FromUserId == fromUserId { //如果指定了用户，则只返回指定用户的消息seq
-			ret.MsgSeqList = append(ret.MsgSeqList, &item.MsgSeq)
+			ret.MsgSeqList = append(ret.MsgSeqList, item.MsgSeq)
 		} else {
 			if item.IsSystemMsg == 0 { //如果没有指定用户，则返回所有非系统消息的seq
-				ret.MsgSeqList = append(ret.MsgSeqList, &item.MsgSeq)
+				ret.MsgSeqList = append(ret.MsgSeqList, item.MsgSeq)
 			}
 		}
 	}
