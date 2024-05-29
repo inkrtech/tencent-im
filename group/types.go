@@ -562,4 +562,16 @@ type (
 		GroupId string `json:"GroupId"` //（必填）要清空历史消息的群组 ID
 		MsgSeq  int    `json:"MsgSeq"`  //（选填）清空小于等于 MsgSeq 的历史消息，不填则清空所有的历史消息
 	}
+	// 群成员封禁（请求）
+	banGroupMemberReq struct {
+		GroupId        string   `json:"GroupId"`         // （必填）封禁成员的群 ID。
+		MembersAccount []string `json:"Members_Account"` // （必填）封禁的群成员账号 ID，单次请求最大20个。
+		Duration       int      `json:"Duration"`        // （必填）封禁时长，单位：秒，无符号32位数字。
+		Description    string   `json:"Description"`     // （选填）封禁信息，最大长度1000字节。
+	}
+	// 群成员解封（请求）
+	unbanGroupMemberReq struct {
+		GroupId        string   `json:"GroupId"`         // （必填）封禁成员的群 ID。
+		MembersAccount []string `json:"Members_Account"` // （必填）封禁的群成员账号 ID，单次请求最大20个。
+	}
 )

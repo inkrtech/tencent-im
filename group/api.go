@@ -43,6 +43,8 @@ const (
 	commandGetGroupSimpleMsg           = "group_msg_get_simple"
 	commandGetOnlineMemberNum          = "get_online_member_num"
 	commandClearGroupMsg               = "clear_group_msg"
+	commandBanGroupMember              = "ban_group_member"
+	commandUnbanGroupMember            = "unban_group_member"
 
 	// 直播群相关
 	serviceLiveGroup           = "group_open_avchatroom_http_svc"
@@ -291,6 +293,13 @@ type API interface {
 	// 点击查看详细文档:
 	// https://cloud.tencent.com/document/product/269/2738
 	GroupMsgGetSimple(groupId, fromUserId string, limit int, msgSeq ...int) (ret *GroupMsgGetSimpleRet, err error)
+
+	// BanGroupMember 群成员封禁
+	// App 管理员可以通过该接口封禁群组成员，封禁后成员无法接收消息，并且封禁时间内无法再次进群。
+	// 直播群封禁功能支持需要终端 SDK 6.6 增强版及以上版本、Web SDK v2.22.0及以上版本，需购买旗舰版套餐包 并在 控制台 > 群功能配置 > 群功能配置 > 直播群封禁成员 打开开关后方可使用。
+	// 点击查看详细文档:
+	// https://cloud.tencent.com/document/product/269/79249
+	BanGroupMember(groupId string, membersAccount []string, duration int, description string) (err error)
 }
 
 type api struct {
@@ -1459,5 +1468,33 @@ func (a *api) GroupMsgGetSimple(groupId, fromUserId string, limit int, msgSeq ..
 			}
 		}
 	}
+	return
+}
+
+// BanGroupMember 群成员封禁
+// App 管理员可以通过该接口封禁群组成员，封禁后成员无法接收消息，并且封禁时间内无法再次进群。
+// 直播群封禁功能支持需要终端 SDK 6.6 增强版及以上版本、Web SDK v2.22.0及以上版本，需购买旗舰版套餐包 并在 控制台 > 群功能配置 > 群功能配置 > 直播群封禁成员 打开开关后方可使用。
+// 点击查看详细文档:
+// https://cloud.tencent.com/document/product/269/79249
+func (a *api) BanGroupMember(groupId string, membersAccount []string, duration int, description string) (err error) {
+	req := &banGroupMemberReq{GroupId: groupId, MembersAccount: membersAccount, Duration: duration, Description: description}
+	if err = a.client.Post(serviceGroup, commandBanGroupMember, req, &types.ActionBaseResp{}); err != nil {
+		return
+	}
+
+	return
+}
+
+// UnbanGroupMember 群成员解封
+// App 管理员可以通过该接口解封成员，解封后，之前封禁的成员可重新进群获取消息。
+// 直播群封禁功能支持需要终端 SDK 6.6 增强版及以上版本、Web SDK v2.22.0及以上版本，需购买旗舰版套餐包 并在 控制台 > 群功能配置 > 群功能配置 > 直播群封禁成员 打开开关后方可使用。
+// 点击查看详细文档:
+// https://cloud.tencent.com/document/product/269/79250
+func (a *api) UnbanGroupMember(groupId string, membersAccount []string) (err error) {
+	req := &unbanGroupMemberReq{GroupId: groupId, MembersAccount: membersAccount}
+	if err = a.client.Post(serviceGroup, commandUnbanGroupMember, req, &types.ActionBaseResp{}); err != nil {
+		return
+	}
+
 	return
 }
