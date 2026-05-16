@@ -1283,15 +1283,18 @@ func (a *api) RevokeMemberMessages(groupId, userId string) (err error) {
 // https://cloud.tencent.com/document/product/269/2738
 func (a *api) FetchMessages(groupId string, limit int, msgSeq ...int) (ret *FetchMessagesRet, err error) {
 	req := &fetchMessagesReq{GroupId: groupId, ReqMsgNumber: limit}
-
-	if len(msgSeq) > 0 {
-		req.ReqMsgSeq = msgSeq[0]
-	}
+	req_ := &fetchMessagesWithoutSeqReq{GroupId: groupId, ReqMsgNumber: limit} //没有msgSeq时，不能有ReqMsgSeq这个字段，不然会默认为0导致接口不返回数据。
 
 	resp := &fetchMessagesResp{}
-
-	if err = a.client.Post(serviceGroup, commandGetGroupSimpleMsg, req, resp); err != nil {
-		return
+	if len(msgSeq) > 0 {
+		req.ReqMsgSeq = msgSeq[0]
+		if err = a.client.Post(serviceGroup, commandGetGroupSimpleMsg, req, resp); err != nil {
+			return
+		}
+	} else {
+		if err = a.client.Post(serviceGroup, commandGetGroupSimpleMsg, req_, resp); err != nil {
+			return
+		}
 	}
 
 	ret = &FetchMessagesRet{}
@@ -1327,6 +1330,8 @@ func (a *api) FetchMessages(groupId string, limit int, msgSeq ...int) (ret *Fetc
 		case 4:
 			message.priority = MsgPriorityLowest
 		}
+		message.SetContent(item.MsgBody)
+		ret.List = append(ret.List, message)
 	}
 
 	return

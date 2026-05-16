@@ -27,6 +27,7 @@ type Message struct {
 	random      uint32           // 消息随机数，由随机函数产生
 	body        []*types.MsgBody // 消息体
 	offlinePush *offlinePush     // 推送实体
+	consumer    []string         // 接收方账号列表
 }
 
 // SetSender 设置发送方UserId
@@ -42,6 +43,16 @@ func (m *Message) GetSender() string {
 // SetLifeTime 设置消息离线保存时长
 func (m *Message) SetLifeTime(lifeTime int) {
 	m.lifeTime = lifeTime
+}
+
+// SetConsumer 设置接收方UserIds
+func (m *Message) SetConsumer(userIds []string) {
+	m.consumer = userIds
+}
+
+// GetConsumer 获取接受者
+func (m *Message) GetConsumer() []string {
+	return m.consumer
 }
 
 // GetLifeTime 获取消息离线保存时长

@@ -17,17 +17,18 @@ import (
 )
 
 const (
-	service                  = "all_member_push"
-	commandPushMessage       = "im_push"
-	commandSetAttrNames      = "im_set_attr_name"
-	commandGetAttrNames      = "im_get_attr_name"
-	commandGetUserAttrs      = "im_get_attr"
-	commandSetUserAttrs      = "im_set_attr"
-	commandDeleteUserAttrs   = "im_remove_attr"
-	commandGetUserTags       = "im_get_tag"
-	commandAddUserTags       = "im_add_tag"
-	commandDeleteUserTags    = "im_remove_tag"
-	commandDeleteUserAllTags = "im_remove_all_tags"
+	service                  = "timpush"
+	commandPushMessage       = "push"
+	commandPushBatchMessage  = "batch"
+	commandSetAttrNames      = "set_attr_name"
+	commandGetAttrNames      = "get_attr_name"
+	commandGetUserAttrs      = "get_attr"
+	commandSetUserAttrs      = "set_attr"
+	commandDeleteUserAttrs   = "remove_attr"
+	commandGetUserTags       = "get_tag"
+	commandAddUserTags       = "add_tag"
+	commandDeleteUserTags    = "remove_tag"
+	commandDeleteUserAllTags = "clear_all_tags"
 
 	batchSetAttrNamesLimit          = 10  // 批量设置应用属性名限制
 	batchGetUserAttrsLimit          = 100 // 批量获取用户属性限制
@@ -57,6 +58,14 @@ type API interface {
 	// 点击查看详细文档:
 	// https://cloud.tencent.com/document/product/269/45935
 	SetAttrNames(attrNames map[int]string) (err error)
+
+	//PushBatchMessage 单发推送
+	//给定接收方账号列表进行推送，接收方账号列表在 [1, 500] 个之间。
+	//支持在线通道，厂商通道（APNS、华为、荣耀、OPPO、vivo、小米、魅族、Google）。
+	//默认不计未读数。
+	// 点击查看详细文档:
+	// https://cloud.tencent.com/document/product/269/108906
+	PushBatchMessage(message *Message) (taskId string, err error)
 
 	// GetAttrNames 获取应用属性名称
 	// 管理员获取应用属性名称。使用前请先 设置应用属性名称 。
@@ -149,6 +158,36 @@ func (a *api) PushMessage(message *Message) (taskId string, err error) {
 
 	taskId = resp.TaskId
 
+	return
+}
+
+// PushBatchMessage 单发推送
+// 给定接收方账号列表进行推送，接收方账号列表在 [1, 500] 个之间。
+// 支持在线通道，厂商通道（APNS、华为、荣耀、OPPO、vivo、小米、魅族、Google）。
+// 默认不计未读数。
+// 点击查看详细文档:
+// https://cloud.tencent.com/document/product/269/108906
+func (a *api) PushBatchMessage(message *Message) (taskId string, err error) {
+	if err = message.checkError(); err != nil {
+		return
+	}
+
+	req := &pushBatchMessageReq{}
+	req.FromUserId = message.GetSender()
+	req.ToAccount = message.GetConsumer()
+	req.MsgLifeTime = message.GetLifeTime()
+	req.OfflinePushInfo = message.GetOfflinePushInfo()
+	req.MsgBody = message.GetBody()
+	req.MsgRandom = message.GetRandom()
+	req.Condition = message.GetCondition()
+
+	resp := &pushMessageResp{}
+
+	if err = a.client.Post(service, commandPushBatchMessage, req, resp); err != nil {
+		return
+	}
+
+	taskId = resp.TaskId
 	return
 }
 

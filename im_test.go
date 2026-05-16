@@ -8,6 +8,7 @@
 package im_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/rand"
 	"strconv"
@@ -216,6 +217,32 @@ func TestIm_Push_PushMessage(t *testing.T) {
 	message.OfflinePush().SetApnsBadgeMode(push.BadgeModeNormal)
 
 	taskId, err := NewIM().Push().PushMessage(message)
+	if err != nil {
+		handleError(t, "push.PushMessage", err)
+	}
+
+	t.Log(taskId)
+}
+
+// 单发推送
+func TestIm_Push_PushBatchMessage(t *testing.T) {
+	message := push.NewMessage()
+	message.SetSender("administrator")
+	message.SetConsumer([]string{"user_111", "user_101"})
+	message.SetLifeTime(5000)
+	message.SetContent(push.MsgTextContent{
+		Text: "Hello Tencent IM",
+	})
+	message.OfflinePush().SetTitle("你好腾讯IM")
+	message.OfflinePush().SetDesc("你好腾讯IM，我来了~~~")
+	message.OfflinePush().SetPushFlag(push.PushFlagYes)
+	message.OfflinePush().SetExt(map[string]interface{}{
+		"url": "http://www.tencent.com",
+	})
+	message.OfflinePush().SetAndroidExtAsHuaweiIntentParam(push.HuaweiIntentParamIntent)
+	message.OfflinePush().SetApnsBadgeMode(push.BadgeModeNormal)
+
+	taskId, err := NewIM().Push().PushBatchMessage(message)
 	if err != nil {
 		handleError(t, "push.PushMessage", err)
 	}
@@ -1461,8 +1488,12 @@ func TestIm_Group_FetchMessages(t *testing.T) {
 	if err != nil {
 		handleError(t, "group.FetchMessages", err)
 	}
-
-	t.Log(ret)
+	//marshal, _ := json.Marshal(ret)
+	//t.Log(string(marshal))
+	for _, v := range ret.List {
+		marshal, _ := json.Marshal(v.Message.GetBody())
+		fmt.Println("----=====", string(marshal))
+	}
 }
 
 // 续拉取群历史消息
