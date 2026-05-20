@@ -209,12 +209,12 @@ func TestIm_Push_PushMessage(t *testing.T) {
 	})
 	message.OfflinePush().SetTitle("你好腾讯IM")
 	message.OfflinePush().SetDesc("你好腾讯IM，我来了~~~")
-	message.OfflinePush().SetPushFlag(push.PushFlagYes)
+	message.OfflinePush().SetPushFlag(0)
 	message.OfflinePush().SetExt(map[string]interface{}{
 		"url": "http://www.tencent.com",
 	})
-	message.OfflinePush().SetAndroidExtAsHuaweiIntentParam(push.HuaweiIntentParamIntent)
-	message.OfflinePush().SetApnsBadgeMode(push.BadgeModeNormal)
+	message.OfflinePush().SetAndroidExtAsHuaweiIntentParam(1)
+	message.OfflinePush().SetApnsBadgeMode(0)
 
 	taskId, err := NewIM().Push().PushMessage(message)
 	if err != nil {
@@ -233,14 +233,15 @@ func TestIm_Push_PushBatchMessage(t *testing.T) {
 	message.SetContent(push.MsgTextContent{
 		Text: "Hello Tencent IM",
 	})
-	message.OfflinePush().SetTitle("你好腾讯IM")
+	message.OfflinePush().SetTitle("test_你好腾讯IM")
 	message.OfflinePush().SetDesc("你好腾讯IM，我来了~~~")
-	message.OfflinePush().SetPushFlag(push.PushFlagYes)
+	message.OfflinePush().SetPushFlag(0)
 	message.OfflinePush().SetExt(map[string]interface{}{
 		"url": "http://www.tencent.com",
 	})
-	message.OfflinePush().SetAndroidExtAsHuaweiIntentParam(push.HuaweiIntentParamIntent)
-	message.OfflinePush().SetApnsBadgeMode(push.BadgeModeNormal)
+	message.OfflinePush().SetAndroidHuaWeiCategory("MARKETING")
+	message.OfflinePush().SetAndroidOPPOCategory("NEWS")
+	message.OfflinePush().SetAndroidHonorImportance("LOW")
 
 	taskId, err := NewIM().Push().PushBatchMessage(message)
 	if err != nil {
@@ -889,12 +890,12 @@ func TestIm_Private_SendMessage(t *testing.T) {
 	})
 	message.OfflinePush().SetTitle("你好腾讯IM")
 	message.OfflinePush().SetDesc("你好腾讯IM，我来了~~~")
-	message.OfflinePush().SetPushFlag(private.PushFlagYes)
+	message.OfflinePush().SetPushFlag(0)
 	message.OfflinePush().SetExt(map[string]interface{}{
 		"url": "http://www.tencent.com",
 	})
-	message.OfflinePush().SetAndroidExtAsHuaweiIntentParam(private.HuaweiIntentParamIntent)
-	message.OfflinePush().SetApnsBadgeMode(private.BadgeModeNormal)
+	message.OfflinePush().SetAndroidExtAsHuaweiIntentParam(1)
+	message.OfflinePush().SetApnsBadgeMode(0)
 
 	ret, err := NewIM().Private().SendMessage(message)
 	if err != nil {
@@ -1397,12 +1398,12 @@ func TestIm_Group_SendMessage(t *testing.T) {
 	})
 	message.OfflinePush().SetTitle("你好腾讯IM")
 	message.OfflinePush().SetDesc("你好腾讯IM，我来了~~~")
-	message.OfflinePush().SetPushFlag(private.PushFlagYes)
+	message.OfflinePush().SetPushFlag(0)
 	message.OfflinePush().SetExt(map[string]interface{}{
 		"url": "http://www.tencent.com",
 	})
-	message.OfflinePush().SetAndroidExtAsHuaweiIntentParam(private.HuaweiIntentParamIntent)
-	message.OfflinePush().SetApnsBadgeMode(private.BadgeModeNormal)
+	message.OfflinePush().SetAndroidExtAsHuaweiIntentParam(1)
+	message.OfflinePush().SetApnsBadgeMode(0)
 	message.AtAllMembers()
 	message.AtMembers(test2)
 	message.ClearAtMembers()

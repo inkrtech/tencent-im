@@ -21,14 +21,21 @@ type (
 
 	// AndroidInfo Android离线推送消息
 	AndroidInfo struct {
-		Sound                  string `json:"Sound,omitempty"`                  // （选填）Android 离线推送声音文件路径。
-		HuaWeiChannelID        string `json:"HuaWeiChannelID,omitempty"`        // （选填）华为手机 EMUI 10.0 及以上的通知渠道字段。该字段不为空时，会覆盖控制台配置的 ChannelID 值；该字段为空时，不会覆盖控制台配置的 ChannelID 值。
-		XiaoMiChannelID        string `json:"XiaoMiChannelID,omitempty"`        // （选填）小米手机 MIUI 10 及以上的通知类别（Channel）适配字段。该字段不为空时，会覆盖控制台配置的 ChannelID 值；该字段为空时，不会覆盖控制台配置的 ChannelID 值。
-		OPPOChannelID          string `json:"OPPOChannelID,omitempty"`          // （选填）OPPO 手机 Android 8.0 及以上的 NotificationChannel 通知适配字段。该字段不为空时，会覆盖控制台配置的 ChannelID 值；该字段为空时，不会覆盖控制台配置的 ChannelID 值。
-		GoogleChannelID        string `json:"GoogleChannelID,omitempty"`        // （选填）Google 手机 Android 8.0 及以上的通知渠道字段。Google 推送新接口（上传证书文件）支持 channel id，旧接口（填写服务器密钥）不支持。
-		VIVOClassification     int    `json:"VIVOClassification,omitempty"`     // （选填）VIVO 手机推送消息分类，“0”代表运营消息，“1”代表系统消息，不填默认为1。
-		HuaWeiImportance       string `json:"HuaWeiImportance,omitempty"`       // （选填）华为推送通知消息分类，取值为 LOW、NORMAL，不填默认为 NORMAL。
-		ExtAsHuaweiIntentParam int    `json:"ExtAsHuaweiIntentParam,omitempty"` // （选填）在控制台配置华为推送为“打开应用内指定页面”的前提下，传“1”表示将透传内容 Ext 作为 Intent 的参数，“0”表示将透传内容 Ext 作为 Action 参数。不填默认为0。两种传参区别可参见 华为推送文档。
+		Sound                        string            `json:"Sound,omitempty"`                        // （选填）Android 离线推送声音文件路径。
+		HuaWeiChannelID              string            `json:"HuaWeiChannelID,omitempty"`              // （选填）华为手机 EMUI 10.0 及以上的通知渠道字段。该字段不为空时，会覆盖控制台配置的 ChannelID 值；该字段为空时，不会覆盖控制台配置的 ChannelID 值。
+		XiaoMiChannelID              string            `json:"XiaoMiChannelID,omitempty"`              // （选填）小米手机 MIUI 10 及以上的通知类别（Channel）适配字段。该字段不为空时，会覆盖控制台配置的 ChannelID 值；该字段为空时，不会覆盖控制台配置的 ChannelID 值。
+		OPPOChannelID                string            `json:"OPPOChannelID,omitempty"`                // （选填）OPPO 手机 Android 8.0 及以上的 NotificationChannel 通知适配字段。该字段不为空时，会覆盖控制台配置的 ChannelID 值；该字段为空时，不会覆盖控制台配置的 ChannelID 值。
+		GoogleChannelID              string            `json:"GoogleChannelID,omitempty"`              // （选填）Google 手机 Android 8.0 及以上的通知渠道字段。Google 推送新接口（上传证书文件）支持 channel id，旧接口（填写服务器密钥）不支持。
+		VIVOClassification           int               `json:"VIVOClassification,omitempty"`           // （选填）VIVO 手机推送消息分类，“0”代表运营消息，“1”代表系统消息，不填默认为1。已经过时
+		HuaWeiImportance             string            `json:"HuaWeiImportance,omitempty"`             // （选填）华为推送通知消息分类，取值为 LOW、NORMAL，不填默认为 NORMAL。
+		ExtAsHuaweiIntentParam       int               `json:"ExtAsHuaweiIntentParam,omitempty"`       // （选填）在控制台配置华为推送为“打开应用内指定页面”的前提下，传“1”表示将透传内容 Ext 作为 Intent 的参数，“0”表示将透传内容 Ext 作为 Action 参数。不填默认为0。两种传参区别可参见 华为推送文档。im没有的字段
+		HuaWeiCategory               string            `json:"HuaWeiCategory,omitempty"`               // （选填）华为推送消息分类，用于标识消息类型，详情参见华为消息分类。 该字段不为空时，会覆盖控制台推送证书配置的 category 值 https://developer.huawei.com/consumer/cn/doc/HMSCore-Guides/message-priority-0000001181716924
+		HonorImportance              string            `json:"HonorImportance,omitempty"`              //（选填）荣耀推送消息分类，取值为 LOW、NORMAL  https://developer.honor.com/cn/docs/11002/guides/notification-class
+		VIVOCategory                 string            `json:"VIVOCategory,omitempty"`                 // （选填）vivo 推送消息分类，用于标识消息类型，详情参见 category 描述。 该字段不为空时，会覆盖控制台推送证书配置的 category 值。 https://dev.vivo.com.cn/documentCenter/doc/359
+		OPPOCategory                 string            `json:"OPPOCategory,omitempty"`                 // （选填）OPPO 推送消息分类，用于标识消息类型，详情参见 category 描述。 该字段不为空时，会覆盖控制台推送证书配置的 category 值。 https://open.oppomobile.com/documentation/page/info?id=13189
+		OPPOPrivateMsgTemplateId     string            `json:"OPPOPrivateMsgTemplateID,omitempty"`     //  （选填）OPPO 推送私信模板 ID，下发对应私信模板时必须携带。如果 OPPOCategory 设置分类为内容与营销，则此字段无效。
+		OPPOPrivateTitleParameters   map[string]string `json:"OPPOPrivateTitleParameters,omitempty"`   //（选填）OPPO 推送私信模板 ID，下发对应私信模板时必须携带。如果 OPPOCategory 设置分类为内容与营销，则此字段无效。详情参见 https://open.oppomobile.com/documentation/page/info?id=12391
+		OPPOPrivateContentParameters map[string]string `json:"OPPOPrivateContentParameters,omitempty"` //（选填）OPPO 推送标题模板填充参数。例：私信模板 ID 标题模板为：欢迎来到$ {city} $ ，$ {city} $ 欢迎您。此参数内容为：{“city”:“北京”}
 	}
 
 	// ApnsInfo IOS离线推送消息

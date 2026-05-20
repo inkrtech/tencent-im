@@ -26,8 +26,8 @@ func newOfflinePush() *offlinePush {
 }
 
 // SetPushFlag 设置推送消息
-func (o *offlinePush) SetPushFlag(pushFlag types.PushFlag) {
-	o.pushFlag = int(pushFlag)
+func (o *offlinePush) SetPushFlag(pushFlag int) {
+	o.pushFlag = pushFlag
 }
 
 // SetTitle 设置离线推送标题
@@ -77,6 +77,38 @@ func (o *offlinePush) SetAndroidOppoChannelId(channelId string) {
 	o.androidInfo.OPPOChannelID = channelId
 }
 
+// SetAndroidOPPOCategory 设置OPPO 推送消息分类，用于标识消息类型
+func (o *offlinePush) SetAndroidOPPOCategory(category string) {
+	if o.androidInfo == nil {
+		o.androidInfo = &types.AndroidInfo{}
+	}
+	o.androidInfo.OPPOCategory = category
+}
+
+// SetAndroidOPPOPrivateMsgTemplateId 设置OPPO 推送私信模板 ID，下发对应私信模板时必须携带。如果 OPPOCategory 设置分类为内容与营销，则此字段无效。
+func (o *offlinePush) SetAndroidOPPOPrivateMsgTemplateId(templateId string) {
+	if o.androidInfo == nil {
+		o.androidInfo = &types.AndroidInfo{}
+	}
+	o.androidInfo.OPPOPrivateMsgTemplateId = templateId
+}
+
+// SetAndroidOPPOPrivateTitleParameters 设置OPPO 推送私信模板 ID，下发对应私信模板时必须携带
+func (o *offlinePush) SetAndroidOPPOPrivateTitleParameters(parameters map[string]string) {
+	if o.androidInfo == nil {
+		o.androidInfo = &types.AndroidInfo{}
+	}
+	o.androidInfo.OPPOPrivateTitleParameters = parameters
+}
+
+// SetAndroidOPPOPrivateContentParameters  设置OPPO 推送标题模板填充参数。
+func (o *offlinePush) SetAndroidOPPOPrivateContentParameters(parameters map[string]string) {
+	if o.androidInfo == nil {
+		o.androidInfo = &types.AndroidInfo{}
+	}
+	o.androidInfo.OPPOPrivateContentParameters = parameters
+}
+
 // SetAndroidGoogleChannelId 设置Google 手机 Android 8.0 及以上的通知渠道字段
 func (o *offlinePush) SetAndroidGoogleChannelId(channelId string) {
 	if o.androidInfo == nil {
@@ -86,35 +118,59 @@ func (o *offlinePush) SetAndroidGoogleChannelId(channelId string) {
 }
 
 // SetAndroidVivoClassification 设置VIVO 手机推送消息分类，“0”代表运营消息，“1”代表系统消息，不填默认为1
-func (o *offlinePush) SetAndroidVivoClassification(classification types.VivoClassification) {
+func (o *offlinePush) SetAndroidVivoClassification(classification int) {
 	if o.androidInfo == nil {
 		o.androidInfo = &types.AndroidInfo{}
 	}
-	o.androidInfo.VIVOClassification = int(classification)
+	o.androidInfo.VIVOClassification = classification
+}
+
+// SetAndroidVIVOCategory 设置VIVO 手机推送消息分类 用于标识消息类型
+func (o *offlinePush) SetAndroidVIVOCategory(category string) {
+	if o.androidInfo == nil {
+		o.androidInfo = &types.AndroidInfo{}
+	}
+	o.androidInfo.VIVOCategory = category
 }
 
 // SetAndroidHuaWeiImportance 设置华为推送通知消息分类
-func (o *offlinePush) SetAndroidHuaWeiImportance(importance types.HuaWeiImportance) {
+func (o *offlinePush) SetAndroidHuaWeiImportance(importance string) {
 	if o.androidInfo == nil {
 		o.androidInfo = &types.AndroidInfo{}
 	}
-	o.androidInfo.HuaWeiImportance = string(importance)
+	o.androidInfo.HuaWeiImportance = importance
 }
 
-// SetAndroidExtAsHuaweiIntentParam 设置在控制台配置华为推送为“打开应用内指定页面”的前提下，传“1”表示将透传内容 Ext 作为 Intent 的参数，“0”表示将透传内容 Ext 作为 Action 参数。不填默认为0。
-func (o *offlinePush) SetAndroidExtAsHuaweiIntentParam(param types.HuaweiIntentParam) {
+// SetAndroidHuaWeiCategory 设置华为推送通知消息分类，用于标识消息类型
+func (o *offlinePush) SetAndroidHuaWeiCategory(category string) {
 	if o.androidInfo == nil {
 		o.androidInfo = &types.AndroidInfo{}
 	}
-	o.androidInfo.ExtAsHuaweiIntentParam = int(param)
+	o.androidInfo.HuaWeiCategory = category
+}
+
+// SetAndroidExtAsHuaweiIntentParam 设置在控制台配置华为推送为“打开应用内指定页面”的前提下，传“1”表示将透传内容 Ext 作为 Intent 的参数，“0”表示将透传内容 Ext 作为 Action 参数。不填默认为0。im没有字段
+func (o *offlinePush) SetAndroidExtAsHuaweiIntentParam(param int) {
+	if o.androidInfo == nil {
+		o.androidInfo = &types.AndroidInfo{}
+	}
+	o.androidInfo.ExtAsHuaweiIntentParam = param
+}
+
+// SetAndroidHonorImportance 设置荣耀推送消息分类
+func (o *offlinePush) SetAndroidHonorImportance(importance string) {
+	if o.androidInfo == nil {
+		o.androidInfo = &types.AndroidInfo{}
+	}
+	o.androidInfo.HonorImportance = importance
 }
 
 // SetApnsBadgeMode 设置IOS徽章计数模式
-func (o *offlinePush) SetApnsBadgeMode(badgeMode types.BadgeMode) {
+func (o *offlinePush) SetApnsBadgeMode(badgeMode int) {
 	if o.apnsInfo == nil {
 		o.apnsInfo = &types.ApnsInfo{}
 	}
-	o.apnsInfo.BadgeMode = int(badgeMode)
+	o.apnsInfo.BadgeMode = badgeMode
 }
 
 // SetApnsTitle 设置APNs推送的标题
@@ -142,9 +198,9 @@ func (o *offlinePush) SetApnsImage(image string) {
 }
 
 // SetApnsMutableContent 设置iOS10的推送扩展开关
-func (o *offlinePush) SetApnsMutableContent(mutable types.MutableContent) {
+func (o *offlinePush) SetApnsMutableContent(mutable int) {
 	if o.apnsInfo == nil {
 		o.apnsInfo = &types.ApnsInfo{}
 	}
-	o.apnsInfo.MutableContent = int(mutable)
+	o.apnsInfo.MutableContent = mutable
 }
