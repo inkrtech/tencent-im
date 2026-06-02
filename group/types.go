@@ -574,4 +574,24 @@ type (
 		GroupId        string   `json:"GroupId"`         // （必填）封禁成员的群 ID。
 		MembersAccount []string `json:"Members_Account"` // （必填）封禁的群成员账号 ID，单次请求最大20个。
 	}
+	getGroupCounterReq struct {
+		GroupId          string   `json:"GroupId"`          // （必填）群组 ID。
+		GroupCounterKeys []string `json:"GroupCounterKeys"` //（必填）获取指定群计数器的 Key 列表，不填则全部返回。
+	}
+
+	GroupCounterResp struct {
+		types.ActionBaseResp
+		GroupCounter []GroupCounter `json:"GroupCounter"` //获取的群计数器最新键值列表。
+	}
+
+	GroupCounter struct { //获取的群计数器最新键值列表。
+		Key   string `json:"Key"`
+		Value int    `json:"Value"`
+	}
+
+	updateGroupCounterReq struct {
+		GroupId      string         `json:"GroupId"`      // （必填）群组 ID。
+		Mode         string         `json:"Mode"`         // （必填）Increase/Decrease 表示基于原来的 Value 进行递增或递减，如果 Key 不存在，则先创建一个 Value 为0的 Key，然后递增或递减。Set 表示直接设置 Key 对应的 Value。
+		GroupCounter []GroupCounter `json:"GroupCounter"` // （必填）群计数器列表，Key 为群计数器的键，Key 数量不超过20个，Key 长度不超过128个字节；Value 为群计数器的值，最大支持 64 位有符号整型。
+	}
 )

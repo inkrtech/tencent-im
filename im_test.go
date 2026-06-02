@@ -1541,3 +1541,53 @@ func TestIm_RecentContact_DeleteSession(t *testing.T) {
 	}
 	t.Log("Success")
 }
+
+// 获取群计数器
+func TestIm_Group_GetGroupCounter(t *testing.T) {
+
+	var groupCounterKeys []string // 获取指定群计数器的 Key 列表，不填则全部返回
+	groupCounterKeys = append(groupCounterKeys, "like", "unlike")
+
+	data, err := NewIM().Group().GetGroupCounter("qj_test_im_121", groupCounterKeys)
+	if err != nil {
+		handleError(t, "group.GetGroupCounter", err)
+	}
+
+	t.Log(data)
+}
+
+// 更新群计数器
+func TestIm_Group_UpdateGroupCounter(t *testing.T) {
+
+	var groupCounter []group.GroupCounter
+
+	like := group.GroupCounter{
+		Key:   "like",
+		Value: 5,
+	}
+
+	unlike := group.GroupCounter{
+		Key:   "unlike",
+		Value: 5,
+	}
+	groupCounter = append(groupCounter, like, unlike)
+
+	data, err := NewIM().Group().UpdateGroupCounter("qj_test_im_121", "Increase", groupCounter)
+	if err != nil {
+		handleError(t, "group.UpdateGroupCounter", err)
+	}
+
+	t.Log(data)
+}
+
+// 删除群计数器
+func TestIm_Group_DeleteGroupCounter(t *testing.T) {
+
+	var groupCounterKeys []string //删除指定的群计数器 Key 列表，不填则全部删除
+	groupCounterKeys = append(groupCounterKeys, "like", "unlike")
+
+	err := NewIM().Group().DeleteGroupCounter("qj_test_im_121", groupCounterKeys)
+	if err != nil {
+		handleError(t, "group.GetGroupCounter", err)
+	}
+}

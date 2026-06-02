@@ -45,7 +45,9 @@ const (
 	commandClearGroupMsg               = "clear_group_msg"
 	commandBanGroupMember              = "ban_group_member"
 	commandUnbanGroupMember            = "unban_group_member"
-
+	commandGetGroupCounter             = "get_group_counter"
+	commandUpdateGroupCounter          = "update_group_counter"
+	commandDeleteGroupCounter          = "delete_group_counter"
 	// 直播群相关
 	serviceLiveGroup           = "group_open_avchatroom_http_svc"
 	commandGetMembers          = "get_members"
@@ -300,6 +302,23 @@ type API interface {
 	// 点击查看详细文档:
 	// https://cloud.tencent.com/document/product/269/79249
 	BanGroupMember(groupId string, membersAccount []string, duration int, description string) (err error)
+	// GetGroupCounter 获取群计数器
+	// App 管理员可以通过该接口获取群计数器。
+	// 点击查看详细文档:
+	// https://cloud.tencent.com/document/product/269/85953
+	GetGroupCounter(groupId string, groupCounterKeys []string) (data GroupCounterResp, err error)
+
+	// UpdateGroupCounter 更新群计数器
+	// App 管理员可以通过该接口更新（设置、递增、递减）群计数器。
+	// 点击查看详细文档:
+	// https://cloud.tencent.com/document/product/269/85952
+	UpdateGroupCounter(groupId, mode string, groupCounter []GroupCounter) (data GroupCounterResp, err error)
+
+	// DeleteGroupCounter 删除群计数器
+	// App 管理员可以通过该接口删除群计数器。
+	// 点击查看详细文档:
+	// https://cloud.tencent.com/document/product/269/85954
+	DeleteGroupCounter(groupId string, groupCounterKeys []string) (err error)
 }
 
 type api struct {
@@ -1501,5 +1520,41 @@ func (a *api) UnbanGroupMember(groupId string, membersAccount []string) (err err
 		return
 	}
 
+	return
+}
+
+// GetGroupCounter 获取群计数器
+// App 管理员可以通过该接口获取群计数器。
+// 点击查看详细文档:
+// https://cloud.tencent.com/document/product/269/85953
+func (a *api) GetGroupCounter(groupId string, groupCounterKeys []string) (data GroupCounterResp, err error) {
+	req := &getGroupCounterReq{GroupId: groupId, GroupCounterKeys: groupCounterKeys}
+	if err = a.client.Post(serviceGroup, commandGetGroupCounter, req, &data); err != nil {
+		return
+	}
+	return
+}
+
+// UpdateGroupCounter 更新群计数器
+// App 管理员可以通过该接口更新（设置、递增、递减）群计数器。
+// 点击查看详细文档:
+// https://cloud.tencent.com/document/product/269/85952
+func (a *api) UpdateGroupCounter(groupId, mode string, groupCounter []GroupCounter) (data GroupCounterResp, err error) {
+	req := &updateGroupCounterReq{GroupId: groupId, Mode: mode, GroupCounter: groupCounter}
+	if err = a.client.Post(serviceGroup, commandUpdateGroupCounter, req, &data); err != nil {
+		return
+	}
+	return
+}
+
+// DeleteGroupCounter 删除群计数器
+// App 管理员可以通过该接口删除群计数器。
+// 点击查看详细文档:
+// https://cloud.tencent.com/document/product/269/85954
+func (a *api) DeleteGroupCounter(groupId string, counterType []string) (err error) {
+	req := &getGroupCounterReq{GroupId: groupId, GroupCounterKeys: counterType}
+	if err = a.client.Post(serviceGroup, commandDeleteGroupCounter, req, &types.ActionBaseResp{}); err != nil {
+		return
+	}
 	return
 }
