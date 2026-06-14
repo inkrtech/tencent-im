@@ -154,6 +154,22 @@ func (m *Message) SetNoLastMsg() {
 	m.sendControls["NoLastMsg"] = true
 }
 
+// SetNoMsgCheck 设置开启云端审核后，该条消息不送审
+func (m *Message) SetNoMsgCheck() {
+	if m.sendControls == nil {
+		m.sendControls = make(map[string]bool, 0)
+	}
+	m.sendControls["NoMsgCheck"] = true
+}
+
+// SetWithMuteNotifications 设置 该条消息的接收方对发送方设置的免打扰选项生效（默认不生效）。
+func (m *Message) SetWithMuteNotifications() {
+	if m.sendControls == nil {
+		m.sendControls = make(map[string]bool, 0)
+	}
+	m.sendControls["WithMuteNotifications"] = true
+}
+
 // GetSendMsgControl 获取消息发送控制选项
 func (m *Message) GetSendMsgControl() (controls []string) {
 	if m.sendControls != nil {
