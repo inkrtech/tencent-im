@@ -325,6 +325,18 @@ type (
 		FaceUrl         string `json:"FaceUrl"`          // 变动后的群头像
 	}
 
+	// OnMemberStateChange 直播群成员在线状态回调
+	OnMemberStateChange struct {
+		CallbackCommand string `json:"CallbackCommand"` // 回调命令
+		GroupId         string `json:"GroupId"`         // 产生群消息的群组 ID
+		EventType       string `json:"EventType"`       // 事件类型：Offline - 掉线、Online - 重新上线
+		EventCause      string `json:"EventCause"`      // 事件原因：HeartbeatInterrupt 心跳中断、HeartbeatRecover 心跳恢复、Join 首次进群、Quit 最后一次退群
+		MemberList      []struct {
+			MemberAccount string `json:"Member_Account"`
+		} `json:"MemberList"` // 产生事件的群成员列表
+		EventTime string `json:"EventTime"` // 毫秒级别，事件触发时间戳
+	}
+
 	// ResultNotify 内容审核结果回调
 	ResultNotify struct {
 		//送审场景：

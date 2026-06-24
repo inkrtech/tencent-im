@@ -42,6 +42,7 @@ const (
 	commandAfterGroupFull            = "Group.CallbackAfterGroupFull"
 	commandAfterGroupDestroyed       = "Group.CallbackAfterGroupDestroyed"
 	commandAfterGroupInfoChanged     = "Group.CallbackAfterGroupInfoChanged"
+	commandOnMemberStateChange       = "Group.CallbackOnMemberStateChange" //直播群成员在线状态回调
 
 	//内容审核
 	commandResultNotify = "ContentCallback.ResultNotify" //审核结果回调
@@ -70,6 +71,7 @@ const (
 	EventAfterGroupFull
 	EventAfterGroupDestroyed
 	EventAfterGroupInfoChanged
+	EventOnMemberStateChange
 	EventResultNotify
 )
 
@@ -282,6 +284,9 @@ func (c *callback) parseCommand(command string, body []byte) (event Event, data 
 	case commandAfterGroupInfoChanged:
 		event = EventAfterGroupInfoChanged
 		data = &AfterGroupInfoChanged{}
+	case commandOnMemberStateChange:
+		event = EventOnMemberStateChange
+		data = &OnMemberStateChange{}
 	case commandResultNotify:
 		event = EventResultNotify
 		data = &ResultNotify{}
