@@ -17,6 +17,7 @@ import (
 )
 
 const (
+	service                            = "openim"
 	serviceGroup                       = "group_open_http_svc"
 	commandFetchGroupIds               = "get_appid_group_list"
 	commandCreateGroup                 = "create_group"
@@ -48,6 +49,7 @@ const (
 	commandGetGroupCounter             = "get_group_counter"
 	commandUpdateGroupCounter          = "update_group_counter"
 	commandDeleteGroupCounter          = "delete_group_counter"
+	commandModifyGroupMsg              = "modify_group_msg"
 	// 直播群相关
 	serviceLiveGroup           = "group_open_avchatroom_http_svc"
 	commandGetMembers          = "get_members"
@@ -319,6 +321,12 @@ type API interface {
 	// 点击查看详细文档:
 	// https://cloud.tencent.com/document/product/269/85954
 	DeleteGroupCounter(groupId string, groupCounterKeys []string) (err error)
+
+	// ModifyGroupMsg 修改群聊历史消息
+	// App 管理员修改群聊历史消息。
+	// 点击查看详细文档:
+	// https://cloud.tencent.com/document/product/269/74741
+	ModifyGroupMsg(groupMsg ModifyGroupMsg) (err error)
 }
 
 type api struct {
@@ -1556,5 +1564,17 @@ func (a *api) DeleteGroupCounter(groupId string, counterType []string) (err erro
 	if err = a.client.Post(serviceGroup, commandDeleteGroupCounter, req, &types.ActionBaseResp{}); err != nil {
 		return
 	}
+	return
+}
+
+// ModifyGroupMsg 修改群聊历史消息
+// App管理员可以通过该接口修改群聊历史消息。
+// 点击查看详细文档:
+// https://cloud.tencent.com/document/product/269/74741
+func (a *api) ModifyGroupMsg(groupMsg ModifyGroupMsg) (err error) {
+	if err = a.client.Post(service, commandModifyGroupMsg, groupMsg, &types.ActionBaseResp{}); err != nil {
+		return
+	}
+
 	return
 }

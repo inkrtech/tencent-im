@@ -594,4 +594,16 @@ type (
 		Mode         string         `json:"Mode"`         // （必填）Increase/Decrease 表示基于原来的 Value 进行递增或递减，如果 Key 不存在，则先创建一个 Value 为0的 Key，然后递增或递减。Set 表示直接设置 Key 对应的 Value。
 		GroupCounter []GroupCounter `json:"GroupCounter"` // （必填）群计数器列表，Key 为群计数器的键，Key 数量不超过20个，Key 长度不超过128个字节；Value 为群计数器的值，最大支持 64 位有符号整型。
 	}
+
+	ModifyGroupMsg struct {
+		GroupId string `json:"GroupId"` //（必填）操作的群 ID。
+		MsgSeq  int    `json:"MsgSeq"`  //（必填）请求修改的消息 Seq。
+		MsgBody []struct {
+			MsgType    string `json:"MsgType"`
+			MsgContent struct {
+				Text string `json:"Text"`
+			} `json:"MsgContent"`
+		} `json:"MsgBody,omitempty"` // （选填）消息内容，具体格式请参见 消息格式描述（注意，一条消息可包括多种消息元素，MsgBody 为 Array 类型）。
+		CloudCustomData string `json:"CloudCustomData,omitempty"` // （选填）消息自定义数据（云端保存，会发送到对端，程序卸载重装后还能拉取到）。
+	}
 )
