@@ -601,7 +601,8 @@ type (
 		MsgBody []struct {
 			MsgType    string `json:"MsgType"`
 			MsgContent struct {
-				Text string `json:"Text"`
+				Text string `json:"Text"` //MsgType = "TIMTextElem" 时的取值字段
+				Data string `json:"Data"` //MsgType = "TIMCustomElem" 时的取值字段
 			} `json:"MsgContent"`
 		} `json:"MsgBody,omitempty"` // （选填）消息内容，具体格式请参见 消息格式描述（注意，一条消息可包括多种消息元素，MsgBody 为 Array 类型）。
 		CloudCustomData string `json:"CloudCustomData,omitempty"` // （选填）消息自定义数据（云端保存，会发送到对端，程序卸载重装后还能拉取到）。
