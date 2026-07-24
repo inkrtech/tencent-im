@@ -44,6 +44,8 @@ const (
 	commandAfterGroupInfoChanged     = "Group.CallbackAfterGroupInfoChanged"
 	commandOnMemberStateChange       = "Group.CallbackOnMemberStateChange" //直播群成员在线状态回调
 
+	commandBotOnGroupMessage = "Bot.OnGroupMessage" //群内@机器人之后回调
+
 	//内容审核
 	commandResultNotify = "ContentCallback.ResultNotify" //审核结果回调
 )
@@ -72,6 +74,7 @@ const (
 	EventAfterGroupDestroyed
 	EventAfterGroupInfoChanged
 	EventOnMemberStateChange
+	EventBotOnGroupMessage
 	EventResultNotify
 )
 
@@ -287,6 +290,9 @@ func (c *callback) parseCommand(command string, body []byte) (event Event, data 
 	case commandOnMemberStateChange:
 		event = EventOnMemberStateChange
 		data = &OnMemberStateChange{}
+	case commandBotOnGroupMessage:
+		event = EventBotOnGroupMessage
+		data = &BotOnGroupMessage{}
 	case commandResultNotify:
 		event = EventResultNotify
 		data = &ResultNotify{}

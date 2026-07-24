@@ -337,6 +337,28 @@ type (
 		EventTime string `json:"EventTime"` // 毫秒级别，事件触发时间戳
 	}
 
+	// BotOnGroupMessage 群内@机器人之后回调
+	BotOnGroupMessage struct {
+		CallbackCommand string `json:"CallbackCommand"`  // 回调命令
+		GroupId         string `json:"GroupId"`          // 群组 ID
+		Type            string `json:"Type"`             // 群组类型
+		FromAccount     string `json:"From_Account"`     // 发送者
+		OperatorAccount string `json:"Operator_Account"` // 请求的发起者
+		Random          int    `json:"Random"`           // 随机数
+		MsgSeq          int    `json:"MsgSeq"`           // 消息的序列号
+		MsgTime         int    `json:"MsgTime"`          // 消息的时间
+		OnlineOnlyFlag  int    `json:"OnlineOnlyFlag"`   // 在线消息，为1，否则为0；直播群忽略此属性，为默认值0。
+		MsgBody         []struct {
+			MsgType    string `json:"MsgType"`
+			MsgContent struct {
+				Text string `json:"Text"`
+			} `json:"MsgContent"`
+		} `json:"MsgBody"` // 消息体，参见 TIMMessage 消息对象
+		AtRobotsAccount []string `json:"AtRobots_Account"` // 被@的机器人列表，群里有多个机器人时，用户可以@多个机器人
+		CloudCustomData string   `json:"CloudCustomData"`  // 消息自定义数据（云端保存，会发送到对端，程序卸载重装后还能拉取到）
+		EventTime       int64    `json:"EventTime"`        // 毫秒级别，事件触发时间戳
+	}
+
 	// ResultNotify 内容审核结果回调
 	ResultNotify struct {
 		//送审场景：
